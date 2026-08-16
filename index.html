@@ -834,6 +834,9 @@ function productCardHTML(p, compact=false){
     <div class="prod-body">
       <div class="prod-name">${p.name}</div>
       <div class="prod-meta">${CATEGORIES[p.category].label} · รองรับทุกรุ่น iPhone 11–17</div>
+      <div class="model-select-row">
+        <select>${MODELS.map(m=>`<option value="${m}">${m}</option>`).join("")}</select>
+      </div>
       <div class="prod-row">
         <span class="prod-price">฿${p.price}</span>
         <button class="mini-btn add-to-cart-btn" data-id="${p.id}">หยิบใส่ตะกร้า</button>
@@ -846,7 +849,7 @@ function attachAddToCartHandlers(scopeEl){
     btn.addEventListener("click", ()=>{
       const id = Number(btn.dataset.id);
       const modelSelect = btn.closest(".prod-card")?.querySelector(".model-select-row select");
-      const model = modelSelect ? modelSelect.value : MODELS[6]; // default iPhone 14
+      const model = modelSelect ? modelSelect.value : MODELS[6]; // fallback เผื่อไม่เจอ dropdown จริงๆ (ปกติจะไม่เกิด) — MODELS[6] = "iPhone 13"
       addToCart(id, model, 1);
     });
   });
