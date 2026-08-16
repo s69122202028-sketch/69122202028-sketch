@@ -501,7 +501,6 @@ let pid = 1;
     color: c,
     price: 259,
     tags: new Set(i<2 ? ["bestseller"] : (i===6?["new"]:[])),
-    models: [...MODELS]
     models: [...MODELS],
     image: PRODUCT_IMAGES[`bear_${c}`]
   });
@@ -516,7 +515,6 @@ let pid = 1;
     color: c,
     price: 289,
     tags: new Set(i===0||i===3 ? ["bestseller"] : []),
-    models: [...MODELS]
     models: [...MODELS],
     image: PRODUCT_IMAGES[`floral_${c}`]
   });
@@ -528,7 +526,7 @@ const quoteSet = [
   {c:"sage",    text:"keep simple"},
   {c:"butter",  text:"be kind"},
   {c:"sky",     text:"day dream"},
-  {c:"lavender",text:"little things"}
+  {c:"lavender",text:"little things"},
   {c:"mint",    text:"keep growing"},
   {c:"peach",   text:"stay sunny"}
 ];
@@ -541,14 +539,19 @@ quoteSet.forEach((q,i)=>{
     price: 249,
     tags: new Set(i===2 ? ["bestseller"] : []),
     models: [...MODELS],
-    quoteText: q.text
+    quoteText: q.text,
     image: PRODUCT_IMAGES[`quote_${q.c}`]
   });
 });
 
 const clearSet = [
-  {text:"cute day", motif:"bear"},
-  {text:"good vibes", motif:"floral"}
+  {text:"cute day",    motif:"bear",   image:"clear_cutebear"},
+  {text:"good vibes",  motif:"floral", image:"clear_goodvibes"},
+  {text:"party time",  motif:"balloon",image:"clear_balloon"},
+  {text:"night sky",   motif:"star",   image:"clear_star"},
+  {text:"sweet heart", motif:"heart",  image:"clear_heart"},
+  {text:"sweet bloom", motif:"floral", image:"clear_bloom"},
+  {text:"cuddle time", motif:"bear",   image:"clear_cuddle"}
 ];
 clearSet.forEach((cl,i)=>{
   PRODUCTS.push({
