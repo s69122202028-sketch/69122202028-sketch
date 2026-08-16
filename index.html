@@ -509,7 +509,6 @@ let pid = 1;
     price: 259,
     tags: new Set(i<2 ? ["bestseller"] : (i===6?["new"]:[])),
     models: [...MODELS],
-}),
     image: PRODUCT_IMAGES[`bear_${c}`]
   });
 });
@@ -524,7 +523,6 @@ let pid = 1;
     price: 289,
     tags: new Set(i===0||i===3 ? ["bestseller"] : []),
     models: [...MODELS],
-}),
     image: PRODUCT_IMAGES[`floral_${c}`]
   });
 });
@@ -548,7 +546,6 @@ quoteSet.forEach((q,i)=>{
     price: 249,
     tags: new Set(i===2 ? ["bestseller"] : []),
     models: [...MODELS],
-}),
     quoteText: q.text,
     image: PRODUCT_IMAGES[`quote_${q.c}`]
   });
@@ -572,7 +569,6 @@ clearSet.forEach((cl,i)=>{
     price: 299,
     tags: new Set(["new"]),
     models: [...MODELS],
-}),
     quoteText: cl.text,
     motif: cl.motif,
     image: PRODUCT_IMAGES[cl.image]
