@@ -451,14 +451,44 @@ const COLORS = {
 };
 
 // ---- Categories ----
-const CATEGORIES = {
-  bear:   {label:"หมีน้อย",     icon:"🐻", desc:"ลายหน้าหมีน่ารัก สีพื้นละมุน"},
-  floral: {label:"สวนดอกไม้",   icon:"🌸", desc:"ลายดอกไม้บานทั่วเคส"},
-  quote:  {label:"คำน้อยๆ",     icon:"🤍", desc:"ข้อความสั้น ๆ ให้กำลังใจ"},
-  clear:  {label:"ใสน่ารัก",    icon:"✨", desc:"เคสใสพิมพ์ลายกันกระแทก"}
+// ---- URL รูปภาพจริงทั้งหมด (โฮสต์บน GitHub Pages) ----
+const IMG_BASE = "https://s69122202028-sketch.github.io/LittleSugar-Case/images/";
+const PRODUCT_IMAGES = {
+  // หมีน้อย 7 สี
+  bear_pink:    IMG_BASE + "bear-pink.png",
+  bear_sage:    IMG_BASE + "bear-light-green.png",
+  bear_butter:  IMG_BASE + "bear-yellow.png",
+  bear_sky:     IMG_BASE + "bear-blue.png",
+  bear_lavender:IMG_BASE + "bear-purple.png",
+  bear_peach:   IMG_BASE + "bear-peach.png",
+  bear_mint:    IMG_BASE + "bear-green.png",
+  // สวนดอกไม้ 7 สี
+  floral_pink:    IMG_BASE + "flower-pink.png",
+  floral_sage:    IMG_BASE + "flower-light-green.png",
+  floral_butter:  IMG_BASE + "flower-yellow.png",
+  floral_sky:     IMG_BASE + "flower-blue.png",
+  floral_lavender:IMG_BASE + "flower-purple.png",
+  floral_peach:   IMG_BASE + "flower-peach.png",
+  floral_mint:    IMG_BASE + "flower-green.png",
+  // คำน้อยๆ 7 สีคำน้อยๆ (5 สี) + ใสน่ารัก (2 ลาย)
+  quote_cream:    IMG_BASE + "cream-text.png",
+  quote_sage:     IMG_BASE + "light-green-text.png",
+  quote_butter:   IMG_BASE + "yellow-text.png",
+  quote_sky:      IMG_BASE + "blue-text.png",
+  quote_lavender: IMG_BASE + "purple-text.png",
+  quote_mint:     IMG_BASE + "green-text.png",   // "Keep Growing" — ลายที่ 6 ของหมวดคำน้อยๆ
+  quote_peach:    IMG_BASE + "peach-text.png",   // "Stay Sunny"   — ลายที่ 7 ของหมวดคำน้อยๆ
+  // ใสน่ารัก
+  clear_cutebear:  IMG_BASE + "bear-pastel.png",
+  clear_goodvibes: IMG_BASE + "flower-pastel.png",
+  clear_balloon:   IMG_BASE + "balloon-pastel.png",
+  clear_star:      IMG_BASE + "star-pastel.png",
+  clear_heart:     IMG_BASE + "heart-pastel.png",
+  clear_bloom:     IMG_BASE + "flower-bow-pastel.png",
+  clear_cuddle:    IMG_BASE + "bear-heart-pastel.png",
 };
 
-// ---- สร้างรายชื่อสินค้า 21 ลาย (ตามภาพอ้างอิง 3 แถว x 7 คอลัมน์) ----
+// ---- สร้างรายชื่อสินค้า 28 ลาย (ตามภาพอ้างอิง 3 แถว x 7 คอลัมน์) ----
 const PRODUCTS = [];
 let pid = 1;
 
@@ -472,6 +502,8 @@ let pid = 1;
     price: 259,
     tags: new Set(i<2 ? ["bestseller"] : (i===6?["new"]:[])),
     models: [...MODELS]
+    models: [...MODELS],
+    image: PRODUCT_IMAGES[`bear_${c}`]
   });
 });
 
@@ -485,6 +517,8 @@ let pid = 1;
     price: 289,
     tags: new Set(i===0||i===3 ? ["bestseller"] : []),
     models: [...MODELS]
+    models: [...MODELS],
+    image: PRODUCT_IMAGES[`floral_${c}`]
   });
 });
 
@@ -495,6 +529,8 @@ const quoteSet = [
   {c:"butter",  text:"be kind"},
   {c:"sky",     text:"day dream"},
   {c:"lavender",text:"little things"}
+  {c:"mint",    text:"keep growing"},
+  {c:"peach",   text:"stay sunny"}
 ];
 quoteSet.forEach((q,i)=>{
   PRODUCTS.push({
@@ -506,6 +542,7 @@ quoteSet.forEach((q,i)=>{
     tags: new Set(i===2 ? ["bestseller"] : []),
     models: [...MODELS],
     quoteText: q.text
+    image: PRODUCT_IMAGES[`quote_${q.c}`]
   });
 });
 
@@ -524,6 +561,7 @@ clearSet.forEach((cl,i)=>{
     models: [...MODELS],
     quoteText: cl.text,
     motif: cl.motif
+    image: PRODUCT_IMAGES[cl.image]
   });
 });
 
@@ -559,9 +597,16 @@ function setDifference(a,b){
 function productById(id){ return PRODUCTS.find(p=>p.id===id); }
 
 /* =========================================================================
-   ไอคอน SVG ของแต่ละลายเคส (วาดจาก path พื้นฐาน ไม่ใช้ไฟล์ภาพภายนอก)
+   ใช้รูปจริงถ้าสินค้ามี p.image ไม่งั้น fallback ไปวาด SVG แบบเดิม
    ========================================================================= */
-function caseSVG(p, size=200){
+// ใช้รูปจริงถ้าสินค้ามี p.image ไม่งั้น fallback ไปวาด SVG แบบเดิม
+function caseThumb(p){
+  if(p.image){
+    return `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;">`;
+  }
+  return caseSVG(p);
+}
+  function caseSVG(p, size=200){
   const hex = COLORS[p.color].hex;
   const isClear = p.category === "clear";
   const bodyFill = isClear ? "url(#glassGrad)" : hex;
@@ -753,7 +798,7 @@ function productCardHTML(p, compact=false){
   <div class="prod-card">
     <div class="prod-thumb" style="background:var(--cream-deep);">
       ${badge}
-      ${caseSVG(p)}
+      ${caseThumb(p)}
     </div>
     <div class="prod-body">
       <div class="prod-name">${p.name}</div>
@@ -872,7 +917,7 @@ function renderProducts(){
     <div class="prod-card">
       <div class="prod-thumb" style="background:var(--cream-deep);">
         ${p.tags.has("bestseller") ? '<span class="badge">ขายดี</span>' : (p.tags.has("new") ? '<span class="badge" style="background:var(--ink-soft)">ลายใหม่</span>' : "")}
-        ${caseSVG(p)}
+        ${caseThumb(p)}
       </div>
       <div class="prod-body">
         <div class="prod-name">${p.name}</div>
@@ -909,8 +954,7 @@ function renderCheckout(){
     const p = productById(item.id);
     const lineTotal = lineItemPrice(p, item.model) * item.qty;
     return `
-    <div class="cart-item">
-      <div class="cart-thumb">${caseSVG(p)}</div>
+    <div class="cart-thumb">${caseThumb(p)}</div>
       <div class="cart-info">
         <b>${p.name}</b>
         <span>${item.model}</span>
