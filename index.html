@@ -508,7 +508,11 @@ let pid = 1;
     color: c,
     price: 259,
     tags: new Set(i<2 ? ["bestseller"] : (i===6?["new"]:[])),
-    models: [...MODELS],
+    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
+models: MODELS.filter(m=>{
+  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
+  return true;
+})
     image: PRODUCT_IMAGES[`bear_${c}`]
   });
 });
@@ -522,7 +526,11 @@ let pid = 1;
     color: c,
     price: 289,
     tags: new Set(i===0||i===3 ? ["bestseller"] : []),
-    models: [...MODELS],
+    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
+models: MODELS.filter(m=>{
+  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
+  return true;
+})
     image: PRODUCT_IMAGES[`floral_${c}`]
   });
 });
@@ -545,7 +553,11 @@ quoteSet.forEach((q,i)=>{
     color: q.c,
     price: 249,
     tags: new Set(i===2 ? ["bestseller"] : []),
-    models: [...MODELS],
+    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
+models: MODELS.filter(m=>{
+  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
+  return true;
+})
     quoteText: q.text,
     image: PRODUCT_IMAGES[`quote_${q.c}`]
   });
@@ -568,7 +580,11 @@ clearSet.forEach((cl,i)=>{
     color: "clear",
     price: 299,
     tags: new Set(["new"]),
-    models: [...MODELS],
+    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
+models: MODELS.filter(m=>{
+  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
+  return true;
+})
     quoteText: cl.text,
     motif: cl.motif,
     image: PRODUCT_IMAGES[cl.image]
@@ -912,7 +928,11 @@ function renderProducts(){
   let finalList = [...result]
     .map(productById)
     .filter(p=> query ? p.name.toLowerCase().includes(query) : true)
-    .filter(p=> model ? p.models.some(m=>m===model) : true);
+    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
+models: MODELS.filter(m=>{
+  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
+  return true;
+})
 
   // แสดงสูตรที่ใช้จริง ณ ตอนนี้ (ให้เห็นภาพ discrete math)
   const formulaEl = document.getElementById("filterFormula");
