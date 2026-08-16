@@ -957,6 +957,7 @@ function renderCheckout(){
     const p = productById(item.id);
     const lineTotal = lineItemPrice(p, item.model) * item.qty;
     return `
+    <div class="cart-item">
     <div class="cart-thumb">${caseThumb(p)}</div>
       <div class="cart-info">
         <b>${p.name}</b>
