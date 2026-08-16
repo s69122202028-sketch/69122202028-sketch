@@ -508,10 +508,7 @@ let pid = 1;
     color: c,
     price: 259,
     tags: new Set(i<2 ? ["bestseller"] : (i===6?["new"]:[])),
-    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
-models: MODELS.filter(m=>{
-  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
-  return true;
+    models: [...MODELS],
 }),
     image: PRODUCT_IMAGES[`bear_${c}`]
   });
@@ -526,10 +523,7 @@ models: MODELS.filter(m=>{
     color: c,
     price: 289,
     tags: new Set(i===0||i===3 ? ["bestseller"] : []),
-    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
-models: MODELS.filter(m=>{
-  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
-  return true;
+    models: [...MODELS],
 }),
     image: PRODUCT_IMAGES[`floral_${c}`]
   });
@@ -553,10 +547,7 @@ quoteSet.forEach((q,i)=>{
     color: q.c,
     price: 249,
     tags: new Set(i===2 ? ["bestseller"] : []),
-    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
-models: MODELS.filter(m=>{
-  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
-  return true;
+    models: [...MODELS],
 }),
     quoteText: q.text,
     image: PRODUCT_IMAGES[`quote_${q.c}`]
@@ -580,10 +571,7 @@ clearSet.forEach((cl,i)=>{
     color: "clear",
     price: 299,
     tags: new Set(["new"]),
-    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
-models: MODELS.filter(m=>{
-  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
-  return true;
+    models: [...MODELS],
 }),
     quoteText: cl.text,
     motif: cl.motif,
