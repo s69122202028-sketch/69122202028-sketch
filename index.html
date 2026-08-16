@@ -693,7 +693,12 @@ function goToPage(name){
   if(name === "checkout") renderCheckout();
 }
 document.querySelectorAll("[data-goto]").forEach(el=>{
-  el.addEventListener("click", ()=> goToPage(el.dataset.goto));
+  el.addEventListener("click", ()=> 
+    if(el.dataset.scrollCat){
+    pendingCategoryFilter = el.dataset.scrollCat;
+    }
+    goToPage(el.dataset.goto);
+  });
 });
 
 /* =========================================================================
