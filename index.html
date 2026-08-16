@@ -512,7 +512,7 @@ let pid = 1;
 models: MODELS.filter(m=>{
   if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
   return true;
-})
+}),
     image: PRODUCT_IMAGES[`bear_${c}`]
   });
 });
@@ -530,7 +530,7 @@ models: MODELS.filter(m=>{
 models: MODELS.filter(m=>{
   if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
   return true;
-})
+}),
     image: PRODUCT_IMAGES[`floral_${c}`]
   });
 });
@@ -557,7 +557,7 @@ quoteSet.forEach((q,i)=>{
 models: MODELS.filter(m=>{
   if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
   return true;
-})
+}),
     quoteText: q.text,
     image: PRODUCT_IMAGES[`quote_${q.c}`]
   });
@@ -584,7 +584,7 @@ clearSet.forEach((cl,i)=>{
 models: MODELS.filter(m=>{
   if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
   return true;
-})
+}),
     quoteText: cl.text,
     motif: cl.motif,
     image: PRODUCT_IMAGES[cl.image]
@@ -709,7 +709,7 @@ function goToPage(name){
   if(name === "checkout") renderCheckout();
 }
 document.querySelectorAll("[data-goto]").forEach(el=>{
-  el.addEventListener("click", ()=> 
+  el.addEventListener("click", ()=>{ 
     if(el.dataset.scrollCat){
     pendingCategoryFilter = el.dataset.scrollCat;
     }
@@ -835,7 +835,7 @@ function productCardHTML(p, compact=false){
       <div class="prod-name">${p.name}</div>
       <div class="prod-meta">${CATEGORIES[p.category].label} · รองรับทุกรุ่น iPhone 11–17</div>
       <div class="model-select-row">
-        <select>${MODELS.map(m=>`<option value="${m}">${m}</option>`).join("")}</select>
+        <select>${p.models.map(m=>`<option value="${m}">${m}</option>`).join("")}</select>
       </div>
       <div class="prod-row">
         <span class="prod-price">฿${p.price}</span>
@@ -931,11 +931,7 @@ function renderProducts(){
   let finalList = [...result]
     .map(productById)
     .filter(p=> query ? p.name.toLowerCase().includes(query) : true)
-    // ตัวอย่าง: iPhone 11-12 (รุ่นเก่า) ไม่มีไซส์ Pro Max เพื่อให้กรองมีความหมาย
-models: MODELS.filter(m=>{
-  if((m.includes("11") || m.includes("12")) && m.includes("Pro Max")) return false;
-  return true;
-})
+    .filter(p=> model ? p.models.some(m=>m===model) : true);
 
   // แสดงสูตรที่ใช้จริง ณ ตอนนี้ (ให้เห็นภาพ discrete math)
   const formulaEl = document.getElementById("filterFormula");
@@ -961,7 +957,7 @@ models: MODELS.filter(m=>{
         <div class="prod-name">${p.name}</div>
         <div class="prod-meta">${CATEGORIES[p.category].label} · ${COLORS[p.color].label}</div>
         <div class="model-select-row">
-          <select>${MODELS.map(m=>`<option value="${m}" ${model===m?'selected':''}>${m}</option>`).join("")}</select>
+          <select>${p.models.map(m=>`<option value="${m}" ${model===m?'selected':''}>${m}</option>`).join("")}</select>
         </div>
         <div class="prod-row">
           <span class="prod-price">฿${p.price}</span>
