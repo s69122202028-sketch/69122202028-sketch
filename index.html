@@ -295,6 +295,46 @@
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+  /* ---------- PRODUCT DETAIL MODAL ---------- */
+  .product-modal-overlay{
+    display:none;
+    position:fixed;inset:0;z-index:300;
+    background:rgba(107,79,63,0.45);
+    align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .product-modal-overlay.show{display:flex;}
+  .product-modal{
+    background:var(--paper);
+    border-radius:var(--radius-lg);
+    max-width:560px;width:100%;
+    max-height:85vh;overflow-y:auto;
+    display:grid;grid-template-columns:1fr 1fr;
+    position:relative;
+    box-shadow:var(--shadow);
+  }
+  .modal-close-btn{
+    position:absolute;top:12px;right:12px;
+    width:32px;height:32px;border-radius:50%;
+    background:var(--cream-deep);border:none;
+    font-size:1rem;font-weight:800;color:var(--ink);
+    z-index:2;
+  }
+  .modal-img-wrap{
+    background:var(--cream-deep);
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+  }
+  .modal-img-wrap svg,.modal-img-wrap img{width:100%;height:100%;}
+  .modal-info{padding:24px;display:flex;flex-direction:column;gap:10px;}
+  .modal-info h3{margin:0;font-size:1.2rem;font-family:'Baloo 2',sans-serif;}
+  .modal-meta{font-size:0.8rem;color:var(--ink-soft);}
+  .modal-price{font-size:1.3rem;font-weight:800;color:var(--ink);}
+  .modal-desc{font-size:0.85rem;color:var(--ink-soft);line-height:1.5;margin:0;}
+  @media(max-width:560px){
+    .product-modal{grid-template-columns:1fr;}
+  }
+  
   @media(max-width:920px){
     .hero{grid-template-columns:1fr;padding-top:30px;}
     .hero-stage{display:none;}
@@ -465,6 +505,23 @@
 <footer>© 2026 Little Sugar Case — ทำด้วยความน่ารักในทุกออเดอร์ 🧸</footer>
 <div class="toast" id="toast"></div>
 
+  <div class="product-modal-overlay" id="productModal">
+  <div class="product-modal">
+    <button class="modal-close-btn" id="modalCloseBtn">✕</button>
+    <div class="modal-img-wrap" id="modalImgWrap"></div>
+    <div class="modal-info">
+      <h3 id="modalName"></h3>
+      <span class="modal-meta" id="modalMeta"></span>
+      <span class="modal-price" id="modalPrice"></span>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="model-select-row">
+        <select id="modalModelSelect"></select>
+      </div>
+      <button class="btn-primary" id="modalAddBtn">หยิบใส่ตะกร้า</button>
+    </div>
+  </div>
+</div>
+  
 <script>
 /* =========================================================================
    LITTLE SUGAR CASE — DATA LAYER
@@ -858,7 +915,7 @@ function renderHome(){
 function productCardHTML(p, compact=false){
   const badge = p.tags.has("bestseller") ? '<span class="badge">ขายดี</span>' : (p.tags.has("new") ? '<span class="badge" style="background:var(--ink-soft)">ลายใหม่</span>' : "");
   return `
-  <div class="prod-card">
+  <div class="prod-card" data-id="${p.id}">
     <div class="prod-thumb" style="background:var(--cream-deep);">
       ${badge}
       ${caseThumb(p)}
@@ -885,6 +942,26 @@ function attachAddToCartHandlers(scopeEl){
       addToCart(id, model, 1);
     });
   });
+}
+  
+  // ---- แสดงรายละเอียดสินค้าใน modal ----
+function openProductModal(id){
+  const p = productById(id);
+  if(!p) return;
+  document.getElementById("modalImgWrap").innerHTML = caseThumb(p);
+  document.getElementById("modalName").textContent = p.name;
+  document.getElementById("modalMeta").textContent = `${CATEGORIES[p.category].label} · ${COLORS[p.color].label}`;
+  document.getElementById("modalPrice").textContent = `฿${p.price}`;
+  document.getElementById("modalDesc").textContent = p.quoteText
+    ? `ข้อความบนเคส: "${p.quoteText}"`
+    : `ลายน่ารักโทนพาสเทล รองรับ iPhone ${p.models.length} รุ่น`;
+  document.getElementById("modalModelSelect").innerHTML =
+    p.models.map(m=>`<option value="${m}">${m}</option>`).join("");
+  document.getElementById("modalAddBtn").dataset.id = p.id;
+  document.getElementById("productModal").classList.add("show");
+}
+function closeProductModal(){
+  document.getElementById("productModal").classList.remove("show");
 }
 
 /* =========================================================================
@@ -980,7 +1057,7 @@ function renderProducts(){
   }
   grid.innerHTML = finalList.map(p=>{
     return `
-    <div class="prod-card">
+    <div class="prod-card" data-id="${p.id}">
       <div class="prod-thumb" style="background:var(--cream-deep);">
         ${p.tags.has("bestseller") ? '<span class="badge">ขายดี</span>' : (p.tags.has("new") ? '<span class="badge" style="background:var(--ink-soft)">ลายใหม่</span>' : "")}
         ${caseThumb(p)}
@@ -1167,6 +1244,29 @@ document.getElementById("placeOrderBtn").addEventListener("click", ()=>{
 /* =========================================================================
    INIT
    ========================================================================= */
+  
+  // ---- คลิกที่การ์ดสินค้า (ไม่ใช่ปุ่ม/dropdown) เพื่อเปิด modal รายละเอียด ----
+document.addEventListener("click", (e)=>{
+  const card = e.target.closest(".prod-card");
+  if(!card) return;
+  if(e.target.closest("button") || e.target.closest("select")) return;
+  openProductModal(Number(card.dataset.id));
+});
+
+// ---- ปุ่มปิด modal / คลิกพื้นหลังเพื่อปิด ----
+document.getElementById("modalCloseBtn").addEventListener("click", closeProductModal);
+document.getElementById("productModal").addEventListener("click", (e)=>{
+  if(e.target.id === "productModal") closeProductModal();
+});
+
+// ---- ปุ่มหยิบใส่ตะกร้าจากใน modal ----
+document.getElementById("modalAddBtn").addEventListener("click", ()=>{
+  const id = Number(document.getElementById("modalAddBtn").dataset.id);
+  const model = document.getElementById("modalModelSelect").value;
+  addToCart(id, model, 1);
+  closeProductModal();
+});
+  
 buildFilterControls();
 renderHome();
 updateNavCartCount();
