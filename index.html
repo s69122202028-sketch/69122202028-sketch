@@ -146,6 +146,41 @@
   .stage-case.c1{left:8%;top:10px;transform:rotate(-9deg);z-index:2;}
   .stage-case.c2{left:38%;top:44px;transform:rotate(4deg);z-index:3;}
   .stage-case.c3{left:64%;top:0;transform:rotate(14deg);z-index:1;}
+  
+  /* ---------- STOREFRONT ---------- */
+  .storefront-section{
+    margin:0 0 46px;
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  .storefront-img{
+    width:100%;
+    height:340px;
+    object-fit:cover;
+    display:block;
+  }
+  .storefront-caption{
+    position:absolute;
+    left:0;right:0;bottom:0;
+    padding:20px 24px;
+    background:linear-gradient(0deg, rgba(107,79,63,0.75), rgba(107,79,63,0));
+    color:#fff;
+  }
+  .storefront-caption b{
+    font-family:'Baloo 2',sans-serif;
+    font-size:1.15rem;
+    display:block;
+    margin-bottom:2px;
+  }
+  .storefront-caption span{
+    font-size:0.8rem;
+    opacity:0.9;
+  }
+  @media(max-width:920px){
+    .storefront-img{height:220px;}
+  }
 
   .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0 46px;}
   .cat-card{
@@ -314,13 +349,22 @@
         </div>
         <div class="welcome-banner" id="welcomeBanner"></div>
       </div>
+      
       <div class="hero-stage">
         <div class="stage-case c1" style="background:var(--pink)"></div>
         <div class="stage-case c2" style="background:var(--sky)"></div>
         <div class="stage-case c3" style="background:var(--butter)"></div>
       </div>
     </div>
-
+    
+ <div class="storefront-section">                              
+      <img class="storefront-img" src="" id="storefrontImg" alt="หน้าร้าน Little Sugar Case">
+      <div class="storefront-caption">
+        <b>หน้าร้าน Little Sugar Case</b>
+        <span>แวะมาเลือกเคสตัวเป็นๆ ได้ที่หน้าร้านของเรา</span>
+      </div>
+    </div>
+    
     <div class="eyebrow">หมวดหมู่สินค้า</div>
     <h2 class="section-title">เลือกช้อปตามลาย</h2>
     <p class="section-sub">แต่ละหมวดคือ <b>เซต</b> ของสินค้า — จำนวนชิ้นต่อหมวดคำนวณสดจาก <code>Set.size</code></p>
@@ -460,6 +504,7 @@ const COLORS = {
   
 // ---- URL รูปภาพจริงทั้งหมด (โฮสต์บน GitHub Pages) ----
 const IMG_BASE = "https://s69122202028-sketch.github.io/LittleSugar-Case/images/";
+const STOREFRONT_IMG = IMG_BASE + "storefront.png";
 const PRODUCT_IMAGES = {
   // หมีน้อย 7 สี
   bear_pink:    IMG_BASE + "bear-pink.png",
@@ -768,6 +813,9 @@ function showToast(msg){
    PAGE 1: HOME
    ========================================================================= */
 function renderHome(){
+  // ---- แสดงรูปหน้าร้านจริง ----
+  document.getElementById("storefrontImg").src = STOREFRONT_IMG;
+  
   // ---- Logic: ลูกค้าใหม่ / ลูกค้าเก่า (if-else + localStorage) ----
   const banner = document.getElementById("welcomeBanner");
   const visited = localStorage.getItem("lsc_visited");
